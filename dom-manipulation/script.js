@@ -30,7 +30,6 @@ function populateCategories() {
       categoryFilter.appendChild(option);
   });
 
-  // Save last selected category from local storage
   const lastSelectedCategory = localStorage.getItem('lastSelectedCategory') || 'all';
   categoryFilter.value = lastSelectedCategory;
 }
@@ -38,8 +37,6 @@ function populateCategories() {
 // Function to display quotes based on the selected category
 function filterQuotes() {
   const selectedCategory = document.getElementById("categoryFilter").value;
-
-  // Save selected category to local storage
   localStorage.setItem('lastSelectedCategory', selectedCategory);
 
   const filteredQuotes = selectedCategory === 'all' ? quotes : quotes.filter(quote => quote.category === selectedCategory);
@@ -60,16 +57,6 @@ function displayQuotes(filteredQuotes) {
   }
 }
 
-// Function to show a random quote
-function showRandomQuote() {
-  const randomIndex = Math.floor(Math.random() * quotes.length);
-  const quote = quotes[randomIndex];
-  const quoteDisplay = document.getElementById("quoteDisplay");
-
-  quoteDisplay.innerHTML = `<p><strong>${quote.category}</strong>: "${quote.text}"</p>`;
-}
-
-// Async function to add a new quote
 async function addQuote() {
   const newQuoteText = document.getElementById("newQuoteText").value;
   const newQuoteCategory = document.getElementById("newQuoteCategory").value;
@@ -109,38 +96,62 @@ async function addQuote() {
   }
 }
 
-// Async function to sync quotes with server
-async function syncQuotes() {
-  try {
-      const response = await fetch("https://jsonplaceholder.typicode.com/posts");
-      if (!response.ok) throw new Error("Network response was not ok");
-
-      const serverQuotes = await response.json();
-      
-      // Notify user about updates
-      alert("Quotes have been updated from the server!");
-
-      // Simple conflict resolution: overwrite local quotes with server quotes
-      quotes = serverQuotes.map(quote => ({
-          text: quote.body,
-          category: "General" // Set a default category for the example
-      }));
-
-      saveQuotes(); // Update local storage with new quotes
-      displayQuotes(quotes); // Refresh displayed quotes
-  } catch (error) {
-      console.error("Error fetching quotes:", error);
-  }
+// Simulated server fetch function
+async function fetchQuotesFromServer() {
+  // Simulate fetching data from a mock API
+  const response = await fetch('https://jsonplaceholder.typicode.com/posts');
+  const data = await response.json();
+  return data.slice(0, 5).map(item => ({
+      text: item.title,
+      category: "Fetched" // or use another field to categorize
+  }));
 }
 
-// Periodically check for new quotes every 30 seconds
+async function syncQuotes() {
+    try {
+        const response = await fetch("https://jsonplaceholder.typicode.com/posts");
+        if (!response.ok) throw new Error("Network response was not ok");
+        
+        const serverQuotes = await response.json();
+        
+        // Notify user about updates
+        alert("Quotes have been updated from the server!");
+
+        // Simple conflict resolution: overwrite local quotes with server quotes
+        quotes = serverQuotes.map(quote => ({
+            text: quote.body,
+            category: "General" // Set a default category for the example
+        }));
+
+        saveQuotes(); // Update local storage with new quotes
+        displayQuotes(quotes); // Refresh displayed quotes
+    } catch (error) {
+        console.error("Error fetching quotes:", error);
+    }
+}
+
+  // Update local quotes
+  quotes = [...quotes, ...updatedQuotes];
+  saveQuotes();
+  displayQuotes(quotes);
+
+
+// Show notifications for updates or conflicts
+function showNotification(message) {
+  const notification = document.getElementById("notification");
+  notification.textContent = message;
+  setTimeout(() => {
+      notification.textContent = "";
+  }, 3000);
+}
+
+// Periodically check for new quotes from the server
 setInterval(syncQuotes, 30000);
 
 // Add event listeners
-document.getElementById("newQuote").addEventListener("click", addQuote);
-document.getElementById("syncQuotes").addEventListener("click", syncQuotes);
+document.getElementById("addQuote").addEventListener("click", addQuote);
 
-// Load quotes and populate categories on initialization
+// Call functions to set up the application
 loadQuotes();
-populateCategories();
-displayQuotes(quotes);
+populateCategories(); // Populate categories in dropdown on load
+window.onload = () => displayQuotes(quotes); // Display quotes on load
