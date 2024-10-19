@@ -7,15 +7,22 @@
 </head>
 <body>
     <h1>Dynamic Quote Generator</h1>
-    
+
+    <!-- Category Filter -->
+    <label for="categoryFilter">Filter by Category:</label>
+    <select id="categoryFilter" onchange="filterQuotes()">
+        <option value="all">All Categories</option>
+        <!-- Categories will be dynamically populated here -->
+    </select>
+
     <!-- Zone d'affichage des citations -->
     <div id="quoteDisplay"></div>
-    
+
     <!-- Bouton pour afficher une nouvelle citation -->
     <button id="newQuote">Show New Quote</button>
 
     <!-- Formulaire pour ajouter une nouvelle citation -->
-    <div>
+    <div id="formContainer">
         <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
         <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
         <button onclick="addQuote()">Add Quote</button>
