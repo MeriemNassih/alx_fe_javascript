@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dynamic Quote Generator</title>
-  </head>
-  <body>
+</head>
+<body>
     <h1>Dynamic Quote Generator</h1>
     
     <!-- Zone d'affichage des citations -->
@@ -16,11 +16,17 @@
 
     <!-- Formulaire pour ajouter une nouvelle citation -->
     <div>
-      <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
-      <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
-      <button onclick="addQuote()">Add Quote</button>
+        <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
+        <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
+        <button onclick="addQuote()">Add Quote</button>
+    </div>
+
+    <!-- Champ pour importer des citations depuis un fichier JSON -->
+    <div>
+        <input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" />
+        <button onclick="exportToJson()">Export Quotes as JSON</button>
     </div>
 
     <script src="script.js"></script>
-  </body>
+</body>
 </html>
