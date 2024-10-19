@@ -150,12 +150,55 @@ function showNotification(message) {
   }, 3000);
 }
 
+// Function to export quotes to a JSON file
+function exportToJsonFile() {
+  const dataStr = JSON.stringify(quotes, null, 2); // Format JSON with indentation
+  const blob = new Blob([dataStr], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "quotes.json"; // Filename for the downloaded file
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url); // Clean up the URL object
+}
+
+// Function to import quotes from a JSON file
+function importFromJsonFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+      try {
+          const importedQuotes = JSON.parse(e.target.result);
+          if (Array.isArray(importedQuotes)) {
+              quotes = importedQuotes;
+              saveQuotes(); // Save imported quotes to local storage
+              populateCategories(); // Update categories in dropdown
+              displayQuotes(quotes); // Display imported quotes
+              showNotification("Quotes imported successfully!"); // Notify user
+          } else {
+              showNotification("Invalid file format. Please upload a valid JSON file.");
+          }
+      } catch (error) {
+          console.error("Error importing quotes:", error);
+          showNotification("Failed to import quotes. Please check the file format.");
+      }
+  };
+  reader.readAsText(file);
+}
+
 // Periodically check for new quotes from the server
 setInterval(syncQuotes, 30000);
 
 // Add event listeners
 document.getElementById("addQuote").addEventListener("click", addQuote);
 document.getElementById("categoryFilter").addEventListener("change", filterQuotes); // Add event listener for filter quotes
+document.getElementById("exportQuotes").addEventListener("click", exportToJsonFile); // Event listener for exporting quotes
+document.getElementById("importQuotes").addEventListener("change", importFromJsonFile); // Event listener for importing quotes
 
 // Call functions to set up the application
 loadQuotes();
