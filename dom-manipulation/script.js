@@ -30,6 +30,7 @@ function populateCategories() {
       categoryFilter.appendChild(option);
   });
 
+  // Restore last selected category
   const lastSelectedCategory = localStorage.getItem('lastSelectedCategory') || 'all';
   categoryFilter.value = lastSelectedCategory;
 }
@@ -37,7 +38,7 @@ function populateCategories() {
 // Function to display quotes based on the selected category
 function filterQuotes() {
   const selectedCategory = document.getElementById("categoryFilter").value;
-  localStorage.setItem('lastSelectedCategory', selectedCategory);
+  localStorage.setItem('lastSelectedCategory', selectedCategory); // Save selected category to local storage
 
   const filteredQuotes = selectedCategory === 'all' ? quotes : quotes.filter(quote => quote.category === selectedCategory);
   displayQuotes(filteredQuotes);
@@ -55,6 +56,15 @@ function displayQuotes(filteredQuotes) {
           quoteDisplay.innerHTML += `<p><strong>${quote.category}</strong>: "${quote.text}"</p>`;
       });
   }
+}
+
+// Function to show a random quote from the quotes array
+function showRandomQuote() {
+  const randomIndex = Math.floor(Math.random() * quotes.length); // Use Math.random to get a random quote
+  const randomQuote = quotes[randomIndex];
+  const quoteDisplay = document.getElementById("quoteDisplay");
+
+  quoteDisplay.innerHTML = `<p><strong>${randomQuote.category}</strong>: "${randomQuote.text}"</p>`;
 }
 
 async function addQuote() {
@@ -113,9 +123,9 @@ async function syncQuotes() {
       if (!response.ok) throw new Error("Network response was not ok");
 
       const serverQuotes = await response.json();
-      
+
       // Notify user about updates
-      showNotification("Quotes synced with server!");
+      showNotification("Quotes synced with server!"); // Updated notification
 
       // Simple conflict resolution: overwrite local quotes with server quotes
       quotes = serverQuotes.map(quote => ({
@@ -145,8 +155,12 @@ setInterval(syncQuotes, 30000);
 
 // Add event listeners
 document.getElementById("addQuote").addEventListener("click", addQuote);
+document.getElementById("categoryFilter").addEventListener("change", filterQuotes); // Add event listener for filter quotes
 
 // Call functions to set up the application
 loadQuotes();
 populateCategories(); // Populate categories in dropdown on load
-window.onload = () => displayQuotes(quotes); // Display quotes on load
+window.onload = () => {
+  displayQuotes(quotes); // Display quotes on load
+  filterQuotes(); // Ensure quotes are filtered based on the last selected category
+};
