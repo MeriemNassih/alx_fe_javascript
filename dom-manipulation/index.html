@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,29 +7,14 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Dynamic Quote Generator</h1>
-
-        <select id="categoryFilter" class="filter-dropdown">
-            <option value="all">All Categories</option>
-        </select>
-
-        <div id="quoteDisplay" class="quote-display"></div>
-
-        <div class="controls">
-            <input type="text" id="newQuoteText" placeholder="Enter new quote">
-            <input type="text" id="newQuoteCategory" placeholder="Enter category">
-            <button id="newQuote">Add Quote</button>
-            <button onclick="exportToJson()">Export Quotes</button>
-            <input type="file" onchange="importFromJsonFile(event)" />
-        </div>
-    </div>
-
-    <div>
-        <input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" />
-        <button onclick="exportToJson()">Export Quotes as JSON</button>
-    </div>
-
+    <h1>Citations Dynamiques</h1>
+    <select id="categoryFilter"></select>
+    <div id="quoteDisplay"></div>
+    <input type="text" id="newQuoteText" placeholder="Nouvelle citation">
+    <input type="text" id="newQuoteCategory" placeholder="Catégorie">
+    <button id="addQuote">Add Quote</button>
+    <button id="syncQuotes">Sync Quotes</button>
+    <div id="notification"></div>
     <script src="script.js"></script>
 </body>
 </html>
