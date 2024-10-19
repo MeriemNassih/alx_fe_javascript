@@ -127,6 +127,7 @@ async function syncQuotes() {
         displayQuotes(quotes); // Refresh displayed quotes
     } catch (error) {
         console.error("Error fetching quotes:", error);
+        showNotification("Failed to sync quotes from the server."); // Notify user on error
     }
 }
 
