@@ -115,7 +115,7 @@ async function syncQuotes() {
       const serverQuotes = await response.json();
       
       // Notify user about updates
-      showNotification("Quotes have been updated from the server!");
+      showNotification("Quotes synced with server!");
 
       // Simple conflict resolution: overwrite local quotes with server quotes
       quotes = serverQuotes.map(quote => ({
