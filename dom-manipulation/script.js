@@ -67,6 +67,23 @@ function showRandomQuote() {
   quoteDisplay.innerHTML = `<p><strong>${randomQuote.category}</strong>: "${randomQuote.text}"</p>`;
 }
 
+// Function to create and append the add quote form dynamically
+function createAddQuoteForm() {
+  const form = document.createElement("form");
+  form.innerHTML = `
+      <input type="text" id="newQuoteText" placeholder="Enter a new quote" required />
+      <input type="text" id="newQuoteCategory" placeholder="Enter category" required />
+      <button type="submit" id="addQuote">Add Quote</button>
+  `;
+
+  form.addEventListener("submit", (event) => {
+      event.preventDefault(); // Prevent page reload
+      addQuote(); // Call the addQuote function
+  });
+
+  document.getElementById("quoteFormContainer").appendChild(form); // Append form to a container in the HTML
+}
+
 async function addQuote() {
   const newQuoteText = document.getElementById("newQuoteText").value;
   const newQuoteCategory = document.getElementById("newQuoteCategory").value;
@@ -195,14 +212,14 @@ function importFromJsonFile(event) {
 setInterval(syncQuotes, 30000);
 
 // Add event listeners
-document.getElementById("addQuote").addEventListener("click", addQuote);
-document.getElementById("categoryFilter").addEventListener("change", filterQuotes); // Add event listener for filter quotes
+document.getElementById("showRandomQuote").addEventListener("click", showRandomQuote); // Event listener for showing random quote
 document.getElementById("exportQuotes").addEventListener("click", exportToJsonFile); // Event listener for exporting quotes
 document.getElementById("importQuotes").addEventListener("change", importFromJsonFile); // Event listener for importing quotes
 
 // Call functions to set up the application
 loadQuotes();
 populateCategories(); // Populate categories in dropdown on load
+createAddQuoteForm(); // Create and add the form for adding new quotes
 window.onload = () => {
   displayQuotes(quotes); // Display quotes on load
   filterQuotes(); // Ensure quotes are filtered based on the last selected category
