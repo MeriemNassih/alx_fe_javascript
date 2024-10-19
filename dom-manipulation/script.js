@@ -108,34 +108,28 @@ async function fetchQuotesFromServer() {
 }
 
 async function syncQuotes() {
-    try {
-        const response = await fetch("https://jsonplaceholder.typicode.com/posts");
-        if (!response.ok) throw new Error("Network response was not ok");
-        
-        const serverQuotes = await response.json();
-        
-        // Notify user about updates
-        alert("Quotes have been updated from the server!");
+  try {
+      const response = await fetch("https://jsonplaceholder.typicode.com/posts");
+      if (!response.ok) throw new Error("Network response was not ok");
 
-        // Simple conflict resolution: overwrite local quotes with server quotes
-        quotes = serverQuotes.map(quote => ({
-            text: quote.body,
-            category: "General" // Set a default category for the example
-        }));
+      const serverQuotes = await response.json();
+      
+      // Notify user about updates
+      showNotification("Quotes have been updated from the server!");
 
-        saveQuotes(); // Update local storage with new quotes
-        displayQuotes(quotes); // Refresh displayed quotes
-    } catch (error) {
-        console.error("Error fetching quotes:", error);
-        showNotification("Failed to sync quotes from the server."); // Notify user on error
-    }
+      // Simple conflict resolution: overwrite local quotes with server quotes
+      quotes = serverQuotes.map(quote => ({
+          text: quote.body,
+          category: "General" // Set a default category for the example
+      }));
+
+      saveQuotes(); // Update local storage with new quotes
+      displayQuotes(quotes); // Refresh displayed quotes
+  } catch (error) {
+      console.error("Error fetching quotes:", error);
+      showNotification("Failed to sync quotes from the server."); // Notify user on error
+  }
 }
-
-  // Update local quotes
-  quotes = [...quotes, ...updatedQuotes];
-  saveQuotes();
-  displayQuotes(quotes);
-
 
 // Show notifications for updates or conflicts
 function showNotification(message) {
